@@ -4,9 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PhotonConnect : MonoBehaviourPunCallbacks
 {
+    //[SerializeField]
+    //private ButtonController matchingController = null;
+
     //Connect関連
     private PhotonView m_photonView = null;
     private string m_roomName = "defaultRoom";
@@ -17,8 +21,11 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     [SerializeField, TooltipAttribute("自動接続可否")]
     private bool m_autoConnect = true;
     private bool m_isManualOnConnect = false;
-    [SerializeField]
-    private const byte m_version = 1;
+    [SerializeField] private const byte m_version = 1;
+    [SerializeField] private int m_playerID;
+
+    //userIDカスタムプロパティ
+    private const string PLAYER_ID = "UserId";
 
     //テキストコンポーネント
     [SerializeField] private Text m_userIdText;
@@ -101,22 +108,52 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         //matchingController.LoadCanvas(true, false, true);
 
         //生成
-        GameObject player = PhotonNetwork.Instantiate("TankPlayer", new Vector3(0, 0, 0), Quaternion.identity, 0);
+        GameObject player = PhotonNetwork.Instantiate("_Sphere", new Vector3(0, 0, 0), Quaternion.identity, 0);
         if (!player.GetComponent<Rigidbody>())
         {
             player.gameObject.AddComponent<Rigidbody>();
         }
         m_photonView = player.GetComponent<PhotonView>();
         //pos設定
-        int ownerID = int.Parse(PhotonNetwork.LocalPlayer.UserId);
-        Vector3 playerPos = m_startPos[(ownerID - 1) % 4];
+        if(m_photonView.IsMine)
+        {
+            UpdatePlayerNum(PhotonNetwork.LocalPlayer, 0);//カスタムプロパティで行けそう
+            m_playerID = GetPlayerNum(PhotonNetwork.LocalPlayer);
+        }
+        Vector3 playerPos = m_startPos[m_playerID % 4];
         player.transform.position = playerPos;
 
         //ログ
-        Debug.Log("Playerがスポーンされました。ower_id : " + ownerID);
+        Debug.Log("Playerがスポーンされました。player_id : " + m_playerID);
         if(m_userIdText)
         {
-            m_userIdText.text = ownerID.ToString();
+            m_userIdText.text = "ID : " + m_playerID.ToString();
         }
     }
+
+    // プレイヤーのカスタムプロパティが更新された時に呼ばれるコールバック
+    public override void OnPlayerPropertiesUpdate(Player target, Hashtable changedProps)
+    {
+        // 更新されたキーと値のペアを、デバッグログに出力する
+        foreach (var p in changedProps)
+        {
+            Debug.Log($"{p.Key}: {p.Value}");
+        }
+    }
+
+    //プレイヤー番号を取得する
+    public int GetPlayerNum(Player player)
+    {
+        int userId = (PhotonNetwork.LocalPlayer.CustomProperties[PLAYER_ID] is int value) ? value : 0;
+        return userId;
+    }
+
+    //プレイヤーの割り当て番号のカスタムプロパティを更新する
+    public void UpdatePlayerNum(Player player, int assignNum)
+    {
+        Hashtable hashtable = new ExitGames.Client.Photon.Hashtable();
+        hashtable[PLAYER_ID] = assignNum;
+        player.SetCustomProperties(hashtable);
+    }
+
 }
