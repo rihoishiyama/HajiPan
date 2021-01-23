@@ -14,7 +14,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 
 	void OnCollisionEnter(Collision other)
 	{
-
 		if (other.gameObject.CompareTag("Wall"))
 		{
 
@@ -24,7 +23,8 @@ public class Bullet : MonoBehaviourPunCallbacks
 			{
 				// if (photonView.isMine)
 				// {
-				// 	Shotbullet.bulletcount -= 1;
+				ShotBullet.bulletcount -= 1;
+				Destroy(this.gameObject);
 				// }
 				// PhotonNetwork.Destroy(this.gameObject);
 			}
@@ -33,23 +33,25 @@ public class Bullet : MonoBehaviourPunCallbacks
 				AudioSource.PlayClipAtPoint(reboundSound, transform.position);
 			}
 		}
-		// if (other.gameObject.CompareTag("Bullet"))
-		// {
+		if (other.gameObject.CompareTag("Bullet"))
+		{
 
-		// 	// if (photonView.isMine)
-		// 	// {
-		// 	// 	Shotbullet.bulletcount -= 1;
-		// 	// }
-		// 	// PhotonNetwork.Destroy(this.gameObject);
-		// }
-		// if (other.gameObject.CompareTag("Player"))
-		// {
-		// 	// if (photonView.isMine)
-		// 	// {
-		// 	// 	Shotbullet.bulletcount -= 1;
-		// 	// }
-		// 	// PhotonNetwork.Destroy(this.gameObject);
-		// }
+			// if (photonView.isMine)
+			// {
+			ShotBullet.bulletcount -= 1;
+			Destroy(this.gameObject);
+			// }
+			// PhotonNetwork.Destroy(this.gameObject);
+		}
+		if (other.gameObject.CompareTag("Player"))
+		{
+			// if (photonView.isMine)
+			// {
+			ShotBullet.bulletcount -= 1;
+			Destroy(this.gameObject);
+		}
+			// }
+			// PhotonNetwork.Destroy(this.gameObject);
     }
 	
 }
