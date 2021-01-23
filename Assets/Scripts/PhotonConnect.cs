@@ -26,6 +26,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
 
     //userIDカスタムプロパティ
     private const string PLAYER_ID = "UserId";
+    private const int PLAYER_MAX_LIMIT = 4;
 
     //テキストコンポーネント
     [SerializeField] private Text m_userIdText;
@@ -83,7 +84,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         //        Debug.Log("CreateRoomComplete");
         //    }
         //}
-        PhotonNetwork.JoinOrCreateRoom(m_roomName, new RoomOptions() { MaxPlayers = 4 }, TypedLobby.Default);
+        PhotonNetwork.JoinOrCreateRoom(m_roomName, new RoomOptions() { MaxPlayers = PLAYER_MAX_LIMIT }, TypedLobby.Default);
     }
 
     // マッチングが成功した時に呼ばれるコールバック
@@ -115,11 +116,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         }
         m_photonView = player.GetComponent<PhotonView>();
         //pos設定
-        if(m_photonView.IsMine)
-        {
-            UpdatePlayerNum(PhotonNetwork.LocalPlayer, 0);//カスタムプロパティで行けそう
-            m_playerID = GetPlayerNum(PhotonNetwork.LocalPlayer);
-        }
+        SetPlayerID();
         Vector3 playerPos = m_startPos[m_playerID % 4];
         player.transform.position = playerPos;
 
@@ -156,4 +153,44 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         player.SetCustomProperties(hashtable);
     }
 
+    // PlayerID付与
+    private void SetPlayerID()
+    {
+        if (m_photonView.IsMine)
+        {
+            List<int> playerSetableCountList = new List<int>();
+
+            //制限人数までの数字のリストを作成
+            int count = 0;
+            for (int i = 0; i < PLAYER_MAX_LIMIT; i++)
+            {
+                playerSetableCountList.Add(count);
+                count++;
+            }
+
+            Player[] otherPlayers = PhotonNetwork.PlayerListOthers;
+
+            //他のプレイヤーがいなければカスタムプロパティの値を"0"に設定
+            if (otherPlayers.Length <= 0)
+            {
+                int playerAssignNum = otherPlayers.Length;
+                UpdatePlayerNum(PhotonNetwork.LocalPlayer, playerAssignNum);
+                return;
+            }
+
+            //他のプレイヤーのカスタムプロパティー取得してリスト作成
+            List<int> playerAssignNums = new List<int>();
+            for (int i = 0; i < otherPlayers.Length; i++)
+            {
+                playerAssignNums.Add(GetPlayerNum(otherPlayers[i]));
+            }
+
+            //リスト同士を比較し、未使用の数字のリストを作成
+            playerSetableCountList.RemoveAll(playerAssignNums.Contains);
+
+            //ローカルのプレイヤーのカスタムプロパティを設定
+            //空いている場所のうち、一番若い数字の箇所を利用
+            UpdatePlayerNum(PhotonNetwork.LocalPlayer, playerSetableCountList[0]);
+        }
+    }
 }
