@@ -31,9 +31,11 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     //テキストコンポーネント
     [SerializeField] private Text m_userIdText;
 
+    //タンク生成初期値
     private Vector3[] m_startPos = { new Vector3(16, 0, 12), new Vector3(-16, 0, 12), new Vector3(-16, 0, -12), new Vector3(16, 0, -12) };
+    private readonly Color[] m_material_colors = new Color[] { Color.red, Color.green,　Color.yellow, Color.blue };
 
- //////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
 
     private void Start()
     {
@@ -115,10 +117,17 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
             player.gameObject.AddComponent<Rigidbody>();
         }
         m_photonView = player.GetComponent<PhotonView>();
-        //pos設定
+
         SetPlayerID();
-        Vector3 playerPos = m_startPos[m_playerID % 4];
+
+        //pos設定
+        Vector3 playerPos = player.transform.position;
+        playerPos = m_startPos[m_playerID];
         player.transform.position = playerPos;
+
+        //カラー設定
+        Renderer render = player.GetComponent<Renderer>();
+        render.material.color = m_material_colors[m_playerID];
 
         //ログ
         Debug.Log("Playerがスポーンされました。player_id : " + m_playerID);
@@ -191,6 +200,61 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
             //ローカルのプレイヤーのカスタムプロパティを設定
             //空いている場所のうち、一番若い数字の箇所を利用
             UpdatePlayerNum(PhotonNetwork.LocalPlayer, playerSetableCountList[0]);
+
+            m_playerID = GetPlayerNum(PhotonNetwork.LocalPlayer);
         }
     }
 }
+
+/*
+[SerializeField]
+private PhotonView photonView;
+[SerializeField]
+private PhotonTransformView photonTransformView;
+[SerializeField]
+private float m_speed = 6.0f;
+private PhotonView m_photonView = null;
+private Renderer m_render = null;
+private readonly Color[] MATERIAL_COLORS = new Color[]
+{
+        Color.white, Color.red, Color.green, Color.blue, Color.green,
+};
+
+private Text text;
+GameObject game;
+
+void Awake()
+{
+    m_photonView = GetComponent<PhotonView>();
+    m_render = GetComponent<Renderer>();
+}
+
+private CharacterController characterController;
+
+void Start()
+{
+    game = GameObject.Find("Text");
+    //text = game.GetComponent<Text>();
+    int ownerID = m_photonView.ownerId;
+    m_render.material.color = MATERIAL_COLORS[ownerID];
+}
+
+void Update()
+{
+    // 持ち主でないのなら制御させない
+    // if (photonView.isMine)
+    // {
+    // 	//現在の移動速度
+    // 	Vector3 velocity = gameObject.GetComponent<Rigidbody>().velocity;
+    // 	//移動速度を指定
+    // 	photonTransformView.SetSynchronizedValues(velocity, 0);
+    // }
+
+    //text.text = m_photonView.isMine.ToString();
+    Vector3 pos = transform.position;
+    pos.x += Input.GetAxis("Horizontal") * m_speed * Time.deltaTime;
+    pos.y += Input.GetAxis("Vertical") * m_speed * Time.deltaTime;
+    transform.position = pos;
+} // class DemoObject
+
+*/

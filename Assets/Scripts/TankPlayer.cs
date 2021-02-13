@@ -36,9 +36,9 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 
 	void Start()
 	{
-		//joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
-		// onFireButton = GameObject.Find("OnFireButton").GetComponent<Button>();
-		// onFireButton.onClick.AddListener(() => shotBullet.ButtonShot());
+		joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
+		onFireButton = GameObject.Find("OnFireButton").GetComponent<Button>();
+		onFireButton.onClick.AddListener(() => shotBullet.ButtonShot());
         //m_photonView = GetComponent<PhotonView>();
 	}
 
@@ -65,9 +65,9 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 
 	void Update()
 	{
-        if (Input.GetMouseButton(0)) {
-            shotBullet.ButtonShot();
-        }
+        if (Input.GetKeyDown(KeyCode.Space)) {
+			shotBullet.ButtonShot();
+			}
 		// if (photonview.isMine)
 		// {
 		// 	Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
@@ -92,7 +92,8 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 		{
 			AudioSource.PlayClipAtPoint(dieSound, transform.position);
 			// this.gameObject.GetComponent<PhotonView> ().TransferOwnership (PhotonNetwork.player.ID);
-			PhotonNetwork.Destroy(this.gameObject);
+			//PhotonNetwork.
+			Destroy(this.gameObject);
 		}
 	}
 }

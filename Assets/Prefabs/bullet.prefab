@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 5260911670081438274}
   - component: {fileID: 6399780320842729872}
   - component: {fileID: 909427091785051760}
+  - component: {fileID: 7833586118297964177}
   m_Layer: 0
   m_Name: bullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1068027943656270186}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -88,7 +89,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1068027943656270186}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 80f42b6615369402dabb5cfcd96a4525, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -109,3 +110,19 @@ MonoBehaviour:
   photonview: {fileID: 0}
   reboundSound: {fileID: 8300000, guid: 503f3c38a2ac54425b1f53974cb9c75a, type: 3}
   reboundcount: 0
+--- !u!54 &7833586118297964177
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068027943656270186}
+  serializedVersion: 2
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
