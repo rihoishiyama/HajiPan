@@ -68,6 +68,13 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
         if (Input.GetKeyDown(KeyCode.Space)) {
 			shotBullet.ButtonShot();
 			}
+		// Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
+		// if (moveVector != Vector3.zero)
+        // {
+        //     transform.rotation = Quaternion.LookRotation(moveVector);
+        //     transform.Translate(moveVector * moveSpeed * Time.deltaTime, Space.World);
+        // } 
+		//Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
 		// if (photonview.isMine)
 		// {
 		// 	Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);

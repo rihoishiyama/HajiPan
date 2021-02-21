@@ -109,7 +109,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         //matchingController.LoadCanvas(true, false, true);
 
         //生成
-        GameObject player = PhotonNetwork.Instantiate("_Sphere", new Vector3(0, 0, 0), Quaternion.identity, 0);
+        GameObject player = PhotonNetwork.Instantiate("TankPlayer", new Vector3(0, 0, 0), Quaternion.identity, 0);
         if (!player.GetComponent<Rigidbody>())
         {
             player.gameObject.AddComponent<Rigidbody>();
