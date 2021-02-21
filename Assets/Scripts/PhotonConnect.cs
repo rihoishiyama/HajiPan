@@ -4,9 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PhotonConnect : MonoBehaviourPunCallbacks
 {
+    //[SerializeField]
+    //private ButtonController matchingController = null;
+
     //Connect関連
     private PhotonView m_photonView = null;
     private string m_roomName = "defaultRoom";
@@ -17,15 +21,21 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     [SerializeField, TooltipAttribute("自動接続可否")]
     private bool m_autoConnect = true;
     private bool m_isManualOnConnect = false;
-    [SerializeField]
-    private const byte m_version = 1;
+    [SerializeField] private const byte m_version = 1;
+    [SerializeField] private int m_playerID;
+
+    //userIDカスタムプロパティ
+    private const string PLAYER_ID = "UserId";
+    private const int PLAYER_MAX_LIMIT = 4;
 
     //テキストコンポーネント
     [SerializeField] private Text m_userIdText;
 
+    //タンク生成初期値
     private Vector3[] m_startPos = { new Vector3(16, 0, 12), new Vector3(-16, 0, 12), new Vector3(-16, 0, -12), new Vector3(16, 0, -12) };
+    private readonly Color[] m_material_colors = new Color[] { Color.red, Color.green,　Color.yellow, Color.blue };
 
- //////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
 
     private void Start()
     {
@@ -76,7 +86,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         //        Debug.Log("CreateRoomComplete");
         //    }
         //}
-        PhotonNetwork.JoinOrCreateRoom(m_roomName, new RoomOptions() { MaxPlayers = 4 }, TypedLobby.Default);
+        PhotonNetwork.JoinOrCreateRoom(m_roomName, new RoomOptions() { MaxPlayers = PLAYER_MAX_LIMIT }, TypedLobby.Default);
     }
 
     // マッチングが成功した時に呼ばれるコールバック
@@ -101,22 +111,150 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         //matchingController.LoadCanvas(true, false, true);
 
         //生成
-        GameObject player = PhotonNetwork.Instantiate("TankPlayer", new Vector3(0, 0, 0), Quaternion.identity, 0);
+        GameObject player = PhotonNetwork.Instantiate("_Sphere", new Vector3(0, 0, 0), Quaternion.identity, 0);
         if (!player.GetComponent<Rigidbody>())
         {
             player.gameObject.AddComponent<Rigidbody>();
         }
         m_photonView = player.GetComponent<PhotonView>();
+
+        SetPlayerID();
+
         //pos設定
-        int ownerID = int.Parse(PhotonNetwork.LocalPlayer.UserId);
-        Vector3 playerPos = m_startPos[(ownerID - 1) % 4];
+        Vector3 playerPos = player.transform.position;
+        playerPos = m_startPos[m_playerID];
         player.transform.position = playerPos;
 
+        //カラー設定
+        Renderer render = player.GetComponent<Renderer>();
+        render.material.color = m_material_colors[m_playerID];
+
         //ログ
-        Debug.Log("Playerがスポーンされました。ower_id : " + ownerID);
+        Debug.Log("Playerがスポーンされました。player_id : " + m_playerID);
         if(m_userIdText)
         {
-            m_userIdText.text = ownerID.ToString();
+            m_userIdText.text = "ID : " + m_playerID.ToString();
+        }
+    }
+
+    // プレイヤーのカスタムプロパティが更新された時に呼ばれるコールバック
+    public override void OnPlayerPropertiesUpdate(Player target, Hashtable changedProps)
+    {
+        // 更新されたキーと値のペアを、デバッグログに出力する
+        foreach (var p in changedProps)
+        {
+            Debug.Log($"{p.Key}: {p.Value}");
+        }
+    }
+
+    //プレイヤー番号を取得する
+    public int GetPlayerNum(Player player)
+    {
+        int userId = (PhotonNetwork.LocalPlayer.CustomProperties[PLAYER_ID] is int value) ? value : 0;
+        return userId;
+    }
+
+    //プレイヤーの割り当て番号のカスタムプロパティを更新する
+    public void UpdatePlayerNum(Player player, int assignNum)
+    {
+        Hashtable hashtable = new ExitGames.Client.Photon.Hashtable();
+        hashtable[PLAYER_ID] = assignNum;
+        player.SetCustomProperties(hashtable);
+    }
+
+    // PlayerID付与
+    private void SetPlayerID()
+    {
+        if (m_photonView.IsMine)
+        {
+            List<int> playerSetableCountList = new List<int>();
+
+            //制限人数までの数字のリストを作成
+            int count = 0;
+            for (int i = 0; i < PLAYER_MAX_LIMIT; i++)
+            {
+                playerSetableCountList.Add(count);
+                count++;
+            }
+
+            Player[] otherPlayers = PhotonNetwork.PlayerListOthers;
+
+            //他のプレイヤーがいなければカスタムプロパティの値を"0"に設定
+            if (otherPlayers.Length <= 0)
+            {
+                int playerAssignNum = otherPlayers.Length;
+                UpdatePlayerNum(PhotonNetwork.LocalPlayer, playerAssignNum);
+                return;
+            }
+
+            //他のプレイヤーのカスタムプロパティー取得してリスト作成
+            List<int> playerAssignNums = new List<int>();
+            for (int i = 0; i < otherPlayers.Length; i++)
+            {
+                playerAssignNums.Add(GetPlayerNum(otherPlayers[i]));
+            }
+
+            //リスト同士を比較し、未使用の数字のリストを作成
+            playerSetableCountList.RemoveAll(playerAssignNums.Contains);
+
+            //ローカルのプレイヤーのカスタムプロパティを設定
+            //空いている場所のうち、一番若い数字の箇所を利用
+            UpdatePlayerNum(PhotonNetwork.LocalPlayer, playerSetableCountList[0]);
+
+            m_playerID = GetPlayerNum(PhotonNetwork.LocalPlayer);
         }
     }
 }
+
+/*
+[SerializeField]
+private PhotonView photonView;
+[SerializeField]
+private PhotonTransformView photonTransformView;
+[SerializeField]
+private float m_speed = 6.0f;
+private PhotonView m_photonView = null;
+private Renderer m_render = null;
+private readonly Color[] MATERIAL_COLORS = new Color[]
+{
+        Color.white, Color.red, Color.green, Color.blue, Color.green,
+};
+
+private Text text;
+GameObject game;
+
+void Awake()
+{
+    m_photonView = GetComponent<PhotonView>();
+    m_render = GetComponent<Renderer>();
+}
+
+private CharacterController characterController;
+
+void Start()
+{
+    game = GameObject.Find("Text");
+    //text = game.GetComponent<Text>();
+    int ownerID = m_photonView.ownerId;
+    m_render.material.color = MATERIAL_COLORS[ownerID];
+}
+
+void Update()
+{
+    // 持ち主でないのなら制御させない
+    // if (photonView.isMine)
+    // {
+    // 	//現在の移動速度
+    // 	Vector3 velocity = gameObject.GetComponent<Rigidbody>().velocity;
+    // 	//移動速度を指定
+    // 	photonTransformView.SetSynchronizedValues(velocity, 0);
+    // }
+
+    //text.text = m_photonView.isMine.ToString();
+    Vector3 pos = transform.position;
+    pos.x += Input.GetAxis("Horizontal") * m_speed * Time.deltaTime;
+    pos.y += Input.GetAxis("Vertical") * m_speed * Time.deltaTime;
+    transform.position = pos;
+} // class DemoObject
+
+*/
