@@ -74,7 +74,9 @@ public class MenuController : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("ルームに参加しました");
-        
+
+        PhotonNetwork.IsMessageQueueRunning = false;
+        SceneManager.LoadSceneAsync("SampleJoystick", LoadSceneMode.Single);
     }
 
     public void StartInit(bool startFlag = true)
@@ -174,7 +176,6 @@ public class MenuController : MonoBehaviourPunCallbacks
     {
         foreach (var info in roomList)
         {
-            //Debug.Log(info.Name);
             foreach (var entry in entryList)
             {
                 if (entry.gameObject.name.Equals(info.Name))

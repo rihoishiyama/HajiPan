@@ -39,6 +39,9 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        //シーン遷移用処理 市川
+        PhotonNetwork.IsMessageQueueRunning = true;
+
         // PhotonServerSettingsに設定した内容を使ってマスターサーバーへ接続する
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -86,6 +89,8 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         //        Debug.Log("CreateRoomComplete");
         //    }
         //}
+
+        //シーン遷移用 市川
         PhotonNetwork.JoinOrCreateRoom(m_roomName, new RoomOptions() { MaxPlayers = PLAYER_MAX_LIMIT }, TypedLobby.Default);
     }
 
