@@ -36,15 +36,18 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
     private Vector3[] m_startPos = { new Vector3(16, 0, 12), new Vector3(-16, 0, 12), new Vector3(-16, 0, -12), new Vector3(16, 0, -12) };
     private readonly Color[] m_material_colors = new Color[] { Color.red, Color.green,　Color.yellow, Color.blue };
 
+    //player生成flag
+    //private bool isSpawn;
+
     //////////////////////////////////////////////////////////////////////////////////
 
     private void Start()
     {
         //シーン遷移用処理 市川
         PhotonNetwork.IsMessageQueueRunning = true;
-
+        SpawnObject();
         // PhotonServerSettingsに設定した内容を使ってマスターサーバーへ接続する
-        PhotonNetwork.ConnectUsingSettings();
+        //PhotonNetwork.ConnectUsingSettings();
     }
 
     private void Update()
@@ -62,9 +65,13 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
             OnConnectedToMaster();
             m_isManualOnConnect = false;
         }
-        if (m_photonView.IsMine) //ここもTank側
+        if (m_photonView != null)
         {
-            Debug.Log(m_updateUserIDText);
+            if (m_photonView.IsMine) //ここもTank側
+            {
+                //確認作業のためコメントアウト 市川
+                //Debug.Log(m_updateUserIDText);
+            }
         }
     }
 
@@ -96,14 +103,14 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
         //}
 
         //シーン遷移用 市川
-        PhotonNetwork.JoinOrCreateRoom(m_roomName, new RoomOptions() { MaxPlayers = PLAYER_MAX_LIMIT }, TypedLobby.Default);
+        //PhotonNetwork.JoinOrCreateRoom(m_roomName, new RoomOptions() { MaxPlayers = PLAYER_MAX_LIMIT }, TypedLobby.Default);
     }
 
     // マッチングが成功した時に呼ばれるコールバック
     public override void OnJoinedRoom()
     {
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
-        SpawnObject();
+        //SpawnObject();
     }
 
     public void OnPhotonCreateRoomFailed()

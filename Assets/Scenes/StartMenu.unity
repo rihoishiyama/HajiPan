@@ -542,6 +542,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 123257045}
   buttonText: {fileID: 5145128}
+  roomName: Room2
 --- !u!1 &238630458
 GameObject:
   m_ObjectHideFlags: 0
@@ -806,6 +807,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 427280021}
   buttonText: {fileID: 713286381}
+  roomName: Room5
 --- !u!1 &624254298
 GameObject:
   m_ObjectHideFlags: 0
@@ -1424,6 +1426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 1012065658}
   buttonText: {fileID: 1179678779}
+  roomName: Room3
 --- !u!1 &1179678777
 GameObject:
   m_ObjectHideFlags: 0
@@ -1638,6 +1641,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 1224142375}
   buttonText: {fileID: 1904182124}
+  roomName: Room4
 --- !u!1 &1253698095
 GameObject:
   m_ObjectHideFlags: 0
@@ -1973,6 +1977,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 1510251754}
   buttonText: {fileID: 1663153692}
+  roomName: Room1
 --- !u!1 &1631042365
 GameObject:
   m_ObjectHideFlags: 0
