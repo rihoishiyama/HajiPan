@@ -24,17 +24,17 @@ public class RoomListEntry : MonoBehaviour
 
     public void Activate(RoomInfo info)
     {
-        Debug.Log("Activate");
-        //Debug.Log(info.Name+": Activate!");
+        //Debug.Log("Activate");
+        Debug.Log(info.Name + ": Activate!");
 
         //roomName = info.Name;
 
         // buttonの記述を変更
-        string playerCounter = string.Format("{0}/{1}", info.PlayerCount, info.MaxPlayers);
+        string playerCounter = string.Format("{0}/{1}", info.PlayerCount, 4);
         buttonText.text = roomName + "\n" + playerCounter;
 
         // roomの人数が満員じゃない時可能
-        button.interactable = (info.PlayerCount < info.MaxPlayers);
+        button.interactable = (info.PlayerCount < 4);
 
         gameObject.SetActive(true);
     }
