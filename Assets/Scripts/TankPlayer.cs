@@ -107,9 +107,8 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 		if (other.gameObject.CompareTag("Bullet"))
 		{
 			AudioSource.PlayClipAtPoint(dieSound, transform.position);
-			// this.gameObject.GetComponent<PhotonView> ().TransferOwnership (PhotonNetwork.player.ID);
-			//PhotonNetwork.
-			Destroy(this.gameObject);
+			//this.gameObject.GetComponent<PhotonView> ().TransferOwnership (PhotonNetwork.player.ID);
+			PhotonNetwork.Destroy(this.gameObject);
 		}
 	}
 }
