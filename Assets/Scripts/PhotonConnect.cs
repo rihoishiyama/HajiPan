@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-public class PhotonConnect : MonoBehaviourPunCallbacks
+public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
 {
     //[SerializeField]
     //private ButtonController matchingController = null;
@@ -29,7 +29,8 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     private const int PLAYER_MAX_LIMIT = 4;
 
     //テキストコンポーネント
-    [SerializeField] private Text m_userIdText;
+    private Text m_userIdText;
+    private string m_updateUserIDText = "";
 
     //タンク生成初期値
     private Vector3[] m_startPos = { new Vector3(16, 0, 12), new Vector3(-16, 0, 12), new Vector3(-16, 0, -12), new Vector3(16, 0, -12) };
@@ -60,6 +61,10 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         {
             OnConnectedToMaster();
             m_isManualOnConnect = false;
+        }
+        if (m_photonView.IsMine) //ここもTank側
+        {
+            Debug.Log(m_updateUserIDText);
         }
     }
 
@@ -110,6 +115,25 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         m_isManualOnConnect = true;
     }
 
+    //情報共有 Tank側に書くべき？
+    void IPunObservable.OnPhotonSerializeView(PhotonStream i_stream, PhotonMessageInfo i_info)
+    {
+        if (i_stream.IsWriting)
+        {
+            //データの送信
+            i_stream.SendNext(m_userIdText);
+            i_stream.SendNext(m_material_colors[m_playerID]);
+        }
+        else
+        {
+            //データの受信
+            Text userIDText = (Text)i_stream.ReceiveNext();
+            Color materialColor = (Color)i_stream.ReceiveNext();
+
+            m_updateUserIDText = userIDText.text;
+        }
+    }
+
     // Player生成
     public void SpawnObject()
     {
@@ -134,11 +158,22 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         Renderer render = player.GetComponent<Renderer>();
         render.material.color = m_material_colors[m_playerID];
 
-        //ログ
-        Debug.Log("Playerがスポーンされました。player_id : " + m_playerID);
-        if(m_userIdText)
+        Transform childObj = player.GetComponentInChildren<Transform>();
+        foreach (Transform child in childObj)
         {
-            m_userIdText.text = "ID : " + m_playerID.ToString();
+            foreach (Transform grandChild in child)
+            {
+                if (grandChild.name == "UserID")
+                {
+                    m_userIdText = grandChild.GetComponent<Text>();
+                    //ログ
+                    Debug.Log("Playerがスポーンされました。player_id : " + m_playerID);
+                    if (m_userIdText)
+                    {
+                        m_userIdText.text = "ID : " + m_playerID.ToString();
+                    }
+                }
+            }
         }
     }
 
