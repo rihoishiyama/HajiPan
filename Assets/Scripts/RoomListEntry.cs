@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
@@ -26,8 +23,6 @@ public class RoomListEntry : MonoBehaviour
     {
         //Debug.Log("Activate");
         Debug.Log(info.Name + ": Activate!");
-
-        //roomName = info.Name;
 
         // buttonの記述を変更
         string playerCounter = string.Format("{0}/{1}", info.PlayerCount, 4);
