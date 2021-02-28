@@ -5,7 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class ShotBullet : MonoBehaviour
+public class ShotBullet : MonoBehaviourPunCallbacks
 {
 	[SerializeField]
 	//private PhotonView photonView;
@@ -40,8 +40,8 @@ public class ShotBullet : MonoBehaviour
 	public void Shot()
 	{
 		// プレファブから砲弾(Shell)オブジェクトを作成し、それをshellという名前の箱に入れる。
-		//GameObject shell = PhotonNetwork.Instantiate("bullet", shotPlace.position, Quaternion.identity, 0);
-		GameObject shell = Instantiate(shellPrefab, shotPlace.position, Quaternion.identity);
+		GameObject shell = PhotonNetwork.Instantiate("bullet", shotPlace.position, Quaternion.identity, 0);
+		//GameObject shell = Instantiate(shellPrefab, shotPlace.position, Quaternion.identity);
 
 		// Rigidbodyの情報を取得し、それをshellRigidbodyという名前の箱に入れる。
 		Rigidbody shellRigidbody = shell.GetComponent<Rigidbody>();

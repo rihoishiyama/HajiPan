@@ -117,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onFireButton: {fileID: 0}
   shotBullet: {fileID: 7847644734172569431}
-  photonview: {fileID: 0}
+  photonview: {fileID: 1586326304659401864}
   moveSpeed: 10
   dieSound: {fileID: 8300000, guid: 6772afd3c062242ec8c1138e97e4d310, type: 3}
   joystick: {fileID: 114859346367353968, guid: ce5089f3caa5bb042a4d4c23a427bc82, type: 3}
@@ -136,10 +136,10 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 0
+  Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 0}
+  - {fileID: -5762656114867330215}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

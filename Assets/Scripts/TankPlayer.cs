@@ -36,6 +36,13 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 
 	void Start()
 	{
+		// 自身が所有者かどうかを判定する
+        if (photonView.IsMine) {
+            // 所有者を取得する
+            Player owner = photonView.Owner;
+            // 所有者のプレイヤー名とIDをコンソールに出力する
+            Debug.Log($"{owner.NickName}({photonView.OwnerActorNr})");
+        }
 		joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
 		onFireButton = GameObject.Find("OnFireButton").GetComponent<Button>();
 		onFireButton.onClick.AddListener(() => shotBullet.ButtonShot());
@@ -66,7 +73,9 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 	void Update()
 	{
         if (Input.GetKeyDown(KeyCode.Space)) {
-			shotBullet.ButtonShot();
+			if (photonView.IsMine) {
+				shotBullet.ButtonShot();
+			}
 			}
 		// Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
 		// if (moveVector != Vector3.zero)
