@@ -21,12 +21,12 @@ public class Bullet : MonoBehaviourPunCallbacks
 
 			if (reboundcount > 1)
 			{
-				// if (photonView.isMine)
-				// {
+				if (photonView.IsMine)
+				{
 				ShotBullet.bulletcount -= 1;
-				Destroy(this.gameObject);
-				// }
-				// PhotonNetwork.Destroy(this.gameObject);
+				//PhotonNetwork.Destroy(this.gameObject);
+				}
+				PhotonNetwork.Destroy(this.gameObject);
 			}
 			else
 			{
@@ -36,22 +36,23 @@ public class Bullet : MonoBehaviourPunCallbacks
 		if (other.gameObject.CompareTag("Bullet"))
 		{
 
-			// if (photonView.isMine)
-			// {
+			if (photonView.IsMine)
+			{
 			ShotBullet.bulletcount -= 1;
-			Destroy(this.gameObject);
-			// }
-			// PhotonNetwork.Destroy(this.gameObject);
+			//PhotonNetwork.Destroy(this.gameObject);
+			}
+			PhotonNetwork.Destroy(this.gameObject);
 		}
 		if (other.gameObject.CompareTag("Player"))
 		{
-			// if (photonView.isMine)
-			// {
+			if (photonView.IsMine)
+			{
 			ShotBullet.bulletcount -= 1;
-			Destroy(this.gameObject);
+			}
+			PhotonNetwork.Destroy(this.gameObject);
+			//Destroy(this.gameObject);
 		}
-			// }
-			// PhotonNetwork.Destroy(this.gameObject);
+			
     }
 	
 }
