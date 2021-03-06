@@ -1,17 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Photon.Pun;
 
 public class GameOver : MonoBehaviour
 {
     [SerializeField] private GameObject m_tankPlayer;
     [SerializeField] private GameObject m_gameOverPanel;
+    [SerializeField] private GameObject m_exitBtn;
+
     private bool m_isCreateTank = false;
         
     void Awake()
     {
         m_gameOverPanel.SetActive(false);
+        m_exitBtn.SetActive(false);
     }
 
     void Update()
@@ -20,6 +25,7 @@ public class GameOver : MonoBehaviour
         {
             Debug.Log("ゲームオーバー");
             m_gameOverPanel.SetActive(true);
+            m_exitBtn.SetActive(true);
             m_isCreateTank = false;
         }
     }
@@ -30,4 +36,15 @@ public class GameOver : MonoBehaviour
         m_tankPlayer = tank;
         m_isCreateTank = true;
     }
+
+    public void PushWatchButton()
+    {
+        m_gameOverPanel.SetActive(false);
+    }
+
+    public void PushExitButton()
+    {
+        SceneManager.LoadSceneAsync("StartMenu", LoadSceneMode.Single);
+    }
+
 }
