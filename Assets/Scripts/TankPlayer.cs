@@ -37,12 +37,12 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 	void Start()
 	{
 		// 自身が所有者かどうかを判定する
-        if (photonView.IsMine) {
-            // 所有者を取得する
-            Player owner = photonView.Owner;
-            // 所有者のプレイヤー名とIDをコンソールに出力する
-            Debug.Log($"{owner.NickName}({photonView.OwnerActorNr})");
-        }
+        // if (photonView.IsMine) {
+        //     // 所有者を取得する
+        //     //Player owner = photonView.Owner;
+        //     // 所有者のプレイヤー名とIDをコンソールに出力する
+        //     //Debug.Log($"{owner.NickName}({photonView.OwnerActorNr})");
+        // }
 		joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
 		onFireButton = GameObject.Find("OnFireButton").GetComponent<Button>();
 		onFireButton.onClick.AddListener(() => shotBullet.ButtonShot());
@@ -108,7 +108,22 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 		{
 			AudioSource.PlayClipAtPoint(dieSound, transform.position);
 			//this.gameObject.GetComponent<PhotonView> ().TransferOwnership (PhotonNetwork.player.ID);
+			//photonView.RequestOwnership();
 			PhotonNetwork.Destroy(this.gameObject);
 		}
 	}
+	private void OnTriggerEnter(Collision other)
+	{
+		if (other.gameObject.CompareTag("Bullet"))
+		{
+			//AudioSource.PlayClipAtPoint(dieSound, transform.position);
+			//this.gameObject.GetComponent<PhotonView> ().TransferOwnership (PhotonNetwork.player.ID);
+			photonView.RequestOwnership();
+			//PhotonNetwork.Destroy(this.gameObject);
+		}
+	}
+	public void DestroyTank()
+    {
+        PhotonNetwork.Destroy(this.gameObject);
+    }
 }
