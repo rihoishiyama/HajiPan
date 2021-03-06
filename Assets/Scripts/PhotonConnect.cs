@@ -36,6 +36,8 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
     private Vector3[] m_startPos = { new Vector3(16, 0, 12), new Vector3(-16, 0, 12), new Vector3(-16, 0, -12), new Vector3(16, 0, -12) };
     private readonly Color[] m_material_colors = new Color[] { Color.red, Color.green,　Color.yellow, Color.blue };
 
+    //ゲームオーバー管理
+    [SerializeField] private GameOver m_gameOver;
     //////////////////////////////////////////////////////////////////////////////////
 
     private void Start()
@@ -64,7 +66,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
         }
         if (m_photonView.IsMine) //ここもTank側
         {
-            Debug.Log(m_updateUserIDText);
+            //Debug.Log(m_updateUserIDText);
         }
     }
 
@@ -148,6 +150,8 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
         m_photonView = player.GetComponent<PhotonView>();
 
         SetPlayerID();
+        player.name = m_playerID + "_TankPlayer"; 
+        m_gameOver.CreateMyTank(player, m_playerID);
 
         //pos設定
         Vector3 playerPos = player.transform.position;
