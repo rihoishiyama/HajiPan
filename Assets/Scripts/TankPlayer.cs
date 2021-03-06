@@ -24,6 +24,7 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 	public float moveSpeed = 10f;
 	public AudioClip dieSound;
 	public Joystick joystick;
+	bool Switch = false; //bool型をSwitchという名前で呼び出し、trueを代入。
 
 	void Awake()
 	{
@@ -77,6 +78,9 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 				shotBullet.ButtonShot();
 			}
 			}
+		if(Switch == true){
+			PhotonNetwork.Destroy(this.gameObject);
+		}
 		// Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
 		// if (moveVector != Vector3.zero)
         // {
@@ -102,28 +106,30 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 		// }
 	}
 
+	private void OnCollisionExit(Collision other)
+	{
+		if (other.gameObject.CompareTag("Bullet"))
+		{
+			
+			//AudioSource.PlayClipAtPoint(dieSound, transform.position);
+			//this.gameObject.GetComponent<PhotonView> ().TransferOwnership (PhotonNetwork.player.ID);
+			//photonView.RequestOwnership();
+			//PhotonNetwork.Destroy(this.gameObject);
+		}
+	}
 	private void OnCollisionEnter(Collision other)
 	{
 		if (other.gameObject.CompareTag("Bullet"))
 		{
 			AudioSource.PlayClipAtPoint(dieSound, transform.position);
+			if (photonView.IsMine)
+			{
+				Switch = true;
+			}
 			//this.gameObject.GetComponent<PhotonView> ().TransferOwnership (PhotonNetwork.player.ID);
 			//photonView.RequestOwnership();
-			PhotonNetwork.Destroy(this.gameObject);
-		}
-	}
-	private void OnTriggerEnter(Collision other)
-	{
-		if (other.gameObject.CompareTag("Bullet"))
-		{
-			//AudioSource.PlayClipAtPoint(dieSound, transform.position);
-			//this.gameObject.GetComponent<PhotonView> ().TransferOwnership (PhotonNetwork.player.ID);
-			photonView.RequestOwnership();
 			//PhotonNetwork.Destroy(this.gameObject);
 		}
 	}
-	public void DestroyTank()
-    {
-        PhotonNetwork.Destroy(this.gameObject);
-    }
+	
 }
