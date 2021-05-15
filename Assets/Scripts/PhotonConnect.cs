@@ -170,6 +170,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
         {
             foreach (Transform grandChild in child)
             {
+                // tankObjの構造が変更されたので修正必要
                 if (grandChild.name == "UserID")
                 {
                     m_userIdText = grandChild.GetComponent<Text>();
