@@ -60,7 +60,8 @@ public class MenuController : MonoBehaviourPunCallbacks
         Debug.Log("ルームに参加しました");
 
         PhotonNetwork.IsMessageQueueRunning = false;
-        SceneManager.LoadSceneAsync("SampleJoystick", LoadSceneMode.Single);
+        //SceneManager.LoadSceneAsync("SampleJoystick", LoadSceneMode.Single);
+        SceneManager.LoadSceneAsync("MainGameScene", LoadSceneMode.Single);
     }
 
     public void StartInit(bool startFlag = true)

@@ -9,12 +9,11 @@ public class RoomListEntry : MonoBehaviour
     private Button button;
     [SerializeField]
     private Text buttonText;
-
+    [SerializeField]
     private string roomName;
 
     void Start()
     {
-        roomName = gameObject.name;
         Debug.Log(roomName);
         button.onClick.AddListener(() => PhotonNetwork.JoinOrCreateRoom(roomName, new RoomOptions() { MaxPlayers = 4 }, TypedLobby.Default));
     }
@@ -22,7 +21,7 @@ public class RoomListEntry : MonoBehaviour
     public void Activate(RoomInfo info)
     {
         //Debug.Log("Activate");
-        Debug.Log(info.Name + ": Activate!");
+        Debug.Log(roomName + ": Activate!");
 
         // buttonの記述を変更
         string playerCounter = string.Format("{0}/{1}", info.PlayerCount, 4);
@@ -32,10 +31,5 @@ public class RoomListEntry : MonoBehaviour
         button.interactable = (info.PlayerCount < 4);
 
         gameObject.SetActive(true);
-    }
-
-    public void Deactivate()
-    {
-        gameObject.SetActive(false);
     }
 }

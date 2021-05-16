@@ -39,15 +39,16 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
 
     //ゲームオーバー管理
     [SerializeField] private GameOver m_gameOver;
+
     //////////////////////////////////////////////////////////////////////////////////
 
     private void Start()
     {
         //シーン遷移用処理 市川
         PhotonNetwork.IsMessageQueueRunning = true;
-
+        SpawnObject();
         // PhotonServerSettingsに設定した内容を使ってマスターサーバーへ接続する
-        PhotonNetwork.ConnectUsingSettings();
+        //PhotonNetwork.ConnectUsingSettings();
     }
 
     private void Update()
@@ -65,9 +66,16 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
             OnConnectedToMaster();
             m_isManualOnConnect = false;
         }
-        //if (m_photonView.IsMine) //ここもTank側
+
+        if (m_photonView != null)
         {
-            //Debug.Log(m_updateUserIDText);
+
+            if (m_photonView.IsMine) //ここもTank側
+            {
+                //確認作業のためコメントアウト 市川
+                //Debug.Log(m_updateUserIDText);
+            }
+
         }
     }
 
@@ -99,14 +107,14 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
         //}
 
         //シーン遷移用 市川
-        PhotonNetwork.JoinOrCreateRoom(m_roomName, new RoomOptions() { MaxPlayers = PLAYER_MAX_LIMIT }, TypedLobby.Default);
+        //PhotonNetwork.JoinOrCreateRoom(m_roomName, new RoomOptions() { MaxPlayers = PLAYER_MAX_LIMIT }, TypedLobby.Default);
     }
 
     // マッチングが成功した時に呼ばれるコールバック
     public override void OnJoinedRoom()
     {
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
-        SpawnObject();
+        //SpawnObject();
     }
 
     public void OnPhotonCreateRoomFailed()
@@ -169,6 +177,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
         {
             foreach (Transform grandChild in child)
             {
+                // tankObjの構造が変更されたので修正必要
                 if (grandChild.name == "UserID")
                 {
                     m_userIdText = grandChild.GetComponent<Text>();
