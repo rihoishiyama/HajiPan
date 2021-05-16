@@ -26,6 +26,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
 
     //userIDカスタムプロパティ
     private const string PLAYER_ID = "UserId";
+    private const string IS_DEAD = "IsDead";
     private const int PLAYER_MAX_LIMIT = 4;
 
     //テキストコンポーネント
@@ -64,7 +65,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
             OnConnectedToMaster();
             m_isManualOnConnect = false;
         }
-        if (m_photonView.IsMine) //ここもTank側
+        //if (m_photonView.IsMine) //ここもTank側
         {
             //Debug.Log(m_updateUserIDText);
         }
@@ -162,6 +163,7 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
         Renderer render = player.GetComponent<Renderer>();
         render.material.color = m_material_colors[m_playerID];
 
+        //Tankの上にUserIDを表示させる
         Transform childObj = player.GetComponentInChildren<Transform>();
         foreach (Transform child in childObj)
         {
@@ -199,10 +201,11 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     //プレイヤーの割り当て番号のカスタムプロパティを更新する
-    public void UpdatePlayerNum(Player player, int assignNum)
+    public void UpdateCustomProperty(Player player, int assignNum, bool isDead)
     {
         Hashtable hashtable = new ExitGames.Client.Photon.Hashtable();
         hashtable[PLAYER_ID] = assignNum;
+        hashtable[IS_DEAD] = isDead;
         player.SetCustomProperties(hashtable);
     }
 
@@ -227,7 +230,9 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
             if (otherPlayers.Length <= 0)
             {
                 int playerAssignNum = otherPlayers.Length;
-                UpdatePlayerNum(PhotonNetwork.LocalPlayer, playerAssignNum);
+                UpdateCustomProperty(PhotonNetwork.LocalPlayer, playerAssignNum, false);
+                m_playerID = GetPlayerNum(PhotonNetwork.LocalPlayer);
+
                 return;
             }
 
@@ -243,62 +248,9 @@ public class PhotonConnect : MonoBehaviourPunCallbacks, IPunObservable
 
             //ローカルのプレイヤーのカスタムプロパティを設定
             //空いている場所のうち、一番若い数字の箇所を利用
-            UpdatePlayerNum(PhotonNetwork.LocalPlayer, playerSetableCountList[0]);
+            UpdateCustomProperty(PhotonNetwork.LocalPlayer, playerSetableCountList[0], false);
 
             m_playerID = GetPlayerNum(PhotonNetwork.LocalPlayer);
         }
     }
 }
-
-/*
-[SerializeField]
-private PhotonView photonView;
-[SerializeField]
-private PhotonTransformView photonTransformView;
-[SerializeField]
-private float m_speed = 6.0f;
-private PhotonView m_photonView = null;
-private Renderer m_render = null;
-private readonly Color[] MATERIAL_COLORS = new Color[]
-{
-        Color.white, Color.red, Color.green, Color.blue, Color.green,
-};
-
-private Text text;
-GameObject game;
-
-void Awake()
-{
-    m_photonView = GetComponent<PhotonView>();
-    m_render = GetComponent<Renderer>();
-}
-
-private CharacterController characterController;
-
-void Start()
-{
-    game = GameObject.Find("Text");
-    //text = game.GetComponent<Text>();
-    int ownerID = m_photonView.ownerId;
-    m_render.material.color = MATERIAL_COLORS[ownerID];
-}
-
-void Update()
-{
-    // 持ち主でないのなら制御させない
-    // if (photonView.isMine)
-    // {
-    // 	//現在の移動速度
-    // 	Vector3 velocity = gameObject.GetComponent<Rigidbody>().velocity;
-    // 	//移動速度を指定
-    // 	photonTransformView.SetSynchronizedValues(velocity, 0);
-    // }
-
-    //text.text = m_photonView.isMine.ToString();
-    Vector3 pos = transform.position;
-    pos.x += Input.GetAxis("Horizontal") * m_speed * Time.deltaTime;
-    pos.y += Input.GetAxis("Vertical") * m_speed * Time.deltaTime;
-    transform.position = pos;
-} // class DemoObject
-
-*/
