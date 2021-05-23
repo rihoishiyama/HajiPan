@@ -35,6 +35,7 @@ public class MenuController : MonoBehaviourPunCallbacks
     private void Start()
     {
         StartInit();
+        PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "jp";
         PhotonNetwork.ConnectUsingSettings();
     }
 
