@@ -20,18 +20,18 @@ public class GameOver : MonoBehaviourPunCallbacks
     private bool m_isCreateTank = false;
     private float m_countdown = 10.0f;
 
-    //void Awake()
-    //{
-    //    m_gameOverPanel.SetActive(false);
-    //    m_judgeTextObj.SetActive(false);
-    //    m_exitBtn.SetActive(false);
-    //    m_watchBtn.SetActive(false);
-    //    m_countdownTextObj.SetActive(false);
+    void Awake()
+    {
+        m_gameOverPanel.SetActive(false);
+        m_judgeTextObj.SetActive(false);
+        m_exitBtn.SetActive(false);
+        m_watchBtn.SetActive(false);
+        m_countdownTextObj.SetActive(false);
 
-    //    m_judgeText = m_judgeTextObj.GetComponent<Text>();
-    //    m_countdownText = m_countdownTextObj.GetComponent<Text>();
+        m_judgeText = m_judgeTextObj.GetComponent<Text>();
+        m_countdownText = m_countdownTextObj.GetComponent<Text>();
 
-    //}
+    }
 
     void Update()
     {
@@ -51,7 +51,7 @@ public class GameOver : MonoBehaviourPunCallbacks
         }
 
         //人数が残り1人になったら強制ゲーム終了→　TODO:自滅もなくなるように
-        if (totalPlayerNum <= 1 && GameState.GetGameState() == GameState.e_GameState.Mactting) // TODO:ここにマッチング中は判定含まないようにする
+        if (totalPlayerNum <= 1 && GameState.GetGameState() != GameState.e_GameState.Mactting)
         {
             int userId = (PhotonNetwork.LocalPlayer.CustomProperties["UserId"] is int _value) ? _value : 0;
 
