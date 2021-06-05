@@ -19,22 +19,25 @@ public class GameOver : MonoBehaviourPunCallbacks
 
     private bool m_isCreateTank = false;
     private float m_countdown = 10.0f;
-        
-    void Awake()
-    {
-        m_gameOverPanel.SetActive(false);
-        m_judgeTextObj.SetActive(false);
-        m_exitBtn.SetActive(false);
-        m_watchBtn.SetActive(false);
-        m_countdownTextObj.SetActive(false);
 
-        m_judgeText = m_judgeTextObj.GetComponent<Text>();
-        m_countdownText = m_countdownTextObj.GetComponent<Text>();
-    }
+    //void Awake()
+    //{
+    //    m_gameOverPanel.SetActive(false);
+    //    m_judgeTextObj.SetActive(false);
+    //    m_exitBtn.SetActive(false);
+    //    m_watchBtn.SetActive(false);
+    //    m_countdownTextObj.SetActive(false);
+
+    //    m_judgeText = m_judgeTextObj.GetComponent<Text>();
+    //    m_countdownText = m_countdownTextObj.GetComponent<Text>();
+
+    //}
 
     void Update()
     {
-        if(m_isCreateTank && m_tankPlayer == null)//photon側で死んだ判定の時の方がいいかも
+        int totalPlayerNum = (PhotonNetwork.CurrentRoom.CustomProperties["playerCnt"] is int value) ? value : 0;
+
+        if (m_isCreateTank && m_tankPlayer == null)//photon側で死んだ判定の時の方がいいかも
         {
             Debug.Log("ゲームオーバー");
             m_gameOverPanel.SetActive(true);
@@ -46,31 +49,31 @@ public class GameOver : MonoBehaviourPunCallbacks
 
             m_isCreateTank = false;
         }
+
         //人数が残り1人になったら強制ゲーム終了→　TODO:自滅もなくなるように
-        int totalPlayerNum = (PhotonNetwork.CurrentRoom.CustomProperties["playerCnt"] is int value) ? value : 0;
-        //if (totalPlayerNum <= 1 /* && gameState != GameMatting */) // TODO:ここにマッチング中は判定含まないようにする
-        //{
-        //    int userId = (PhotonNetwork.LocalPlayer.CustomProperties["UserId"] is int _value) ? _value : 0;
+        if (totalPlayerNum <= 1 && GameState.GetGameState() == GameState.e_GameState.Mactting) // TODO:ここにマッチング中は判定含まないようにする
+        {
+            int userId = (PhotonNetwork.LocalPlayer.CustomProperties["UserId"] is int _value) ? _value : 0;
 
-        //    Debug.Log("Player " + userId + " is Win!!");
-        //    m_gameOverPanel.SetActive(true);
-        //    m_judgeTextObj.SetActive(true);
-        //    m_exitBtn.SetActive(true);
-        //    m_countdownTextObj.SetActive(true);
+            Debug.Log("Player " + userId + " is Win!!");
+            m_gameOverPanel.SetActive(true);
+            m_judgeTextObj.SetActive(true);
+            m_exitBtn.SetActive(true);
+            m_countdownTextObj.SetActive(true);
 
-        //    m_judgeText.text = "Player " + userId + " is Win!!";
+            m_judgeText.text = "Player " + userId + " is Win!!";
 
-        //    m_isCreateTank = false;
+            m_isCreateTank = false;
 
-        //    //5秒後にStartMenuへ移動
-        //    m_countdown -= Time.deltaTime;
-        //    m_countdownText.text = "タイトルに戻るまで　" + (int)m_countdown;
-        //    if (m_countdown <= 0.0f)
-        //    {
-        //        PhotonNetwork.LeaveRoom();
-        //        SceneManager.LoadSceneAsync("StartMenu", LoadSceneMode.Single);
-        //    }
-        //}
+            //5秒後にStartMenuへ移動
+            m_countdown -= Time.deltaTime;
+            m_countdownText.text = "タイトルに戻るまで　" + (int)m_countdown;
+            if (m_countdown <= 0.0f)
+            {
+                PhotonNetwork.LeaveRoom();
+                SceneManager.LoadSceneAsync("StartMenu", LoadSceneMode.Single);
+            }
+        }
     }
 
     public void CreateMyTank(GameObject tank, int playerID)
