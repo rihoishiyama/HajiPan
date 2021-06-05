@@ -116,7 +116,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         UpdateRoomCustomProperties(playerCnt);
 
         // startBtn起動
-        if (playerCnt == 4)
+        if (playerCnt > 1)
         {
             isEnableStart = true;
         }
@@ -133,7 +133,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         UpdateRoomCustomProperties(playerCnt);
 
         // startBtn不可
-        if (playerCnt != 4)
+        if (playerCnt == 1)
         {
             isEnableStart = false;
             if (PhotonNetwork.IsMasterClient)
