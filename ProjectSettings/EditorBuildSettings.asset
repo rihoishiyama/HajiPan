@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainGameScene.unity
     guid: 6d0d4446f0a7145749d52638c2dcad5c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleJoystick.unity
     guid: 893a3a86b8b624bb28c76af387f8e1c8
   m_configObjects: {}

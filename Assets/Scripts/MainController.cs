@@ -42,6 +42,8 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
     private Button startBtn;
 
     private bool isEnableStart = false;
+    private int playerCnt;
+    private Hashtable customProperties = PhotonNetwork.CurrentRoom.CustomProperties;
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -50,10 +52,11 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         // シーン遷移用処理 ichikawa
         PhotonNetwork.IsMessageQueueRunning = true;
         Debug.Log(PhotonNetwork.CurrentRoom.Name + "に入室");
-        
+
         // テスト
-        Debug.Log("Start playerCnt: " + PhotonNetwork.CurrentRoom.PlayerCount);
-        UpdateRoomCustomProperties(PhotonNetwork.CurrentRoom.PlayerCount);        
+        playerCnt = PhotonNetwork.CurrentRoom.PlayerCount;
+        Debug.Log("Start playerCnt: " + playerCnt);
+        UpdateRoomCustomProperties(playerCnt);        
 
         // trueで操作不可, falseで操作可能
         blockTouchObj.raycastTarget = true;
@@ -80,6 +83,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
+        if (customProperties["GameState"] == null) return;
         if (isEnableStart && PhotonNetwork.IsMasterClient)
         {
             Debug.Log("startBtn Activate");
@@ -87,27 +91,48 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
             // 毎回Updateで動いてしまうため
             isEnableStart = false;
         }
+
+        Debug.Log(customProperties["GameState"]);
+        Debug.Log("Get: " + GameState.GetGameState());
+        /*
+         * customPropはMactting→GameStartに変化0→1
+         * GameStateはMacttingのまま変化しない
+         */
+
+        /* でも, masterClient以外このif分は処理されない
+         * なんで??
+         */
+        if (GameState.e_GameState.GameStart.Equals(customProperties["GameState"]))
+        {
+            GameStartProcess();
+            Debug.Log("started GameState Get: " + GameState.GetGameState());
+        }
     }
 
     public void GameStartBtn()
+    {
+        /* masterClientしか処理されない.
+         * 他ユーザのGameStateはMattchingのまま
+         * masterClientの情報をCustomProperすることでcustomProperties["GameState"]は更新されてる.
+         */
+        GameState.SetGameState(GameState.e_GameState.GameStart);
+        UpdateRoomCustomProperties(playerCnt);
+    }
+
+    private void GameStartProcess()
     {
         // TODO
         // startのAnimationを追加したい
         Debug.Log("push StartBtn");
         blockTouchObj.raycastTarget = false;
         startBtn.gameObject.SetActive(false);
+        GameState.SetGameState(GameState.e_GameState.Game);
         Debug.Log("GameStart!!");
     }
 
-    /*
-     * roomの人数を更新したい  TODO
-     * roomにCustomPropertiesを用いて人数を常に引用できるようにしたい.
-     * hashtableの名前はplayerCnt
-     * OnJoinedRoomはMenuControllerで記述したやつが動いて以降動かない. 
-    */
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        var playerCnt = 0;
+        playerCnt = 0;
         Debug.Log("player入室");
         foreach (var p in PhotonNetwork.PlayerList)
         {
@@ -124,7 +149,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        var playerCnt = 0;
+        playerCnt = 0;
         Debug.Log("player退出");
         foreach (var p in PhotonNetwork.PlayerList)
         {
@@ -147,10 +172,13 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PhotonNetwork.InRoom)
         {
-            Hashtable customProperties = PhotonNetwork.CurrentRoom.CustomProperties;
             customProperties["playerCnt"] = playerCnt;
             roomNumText.text = string.Format("{0}/{1}", playerCnt, 4);
             Debug.Log("Update Room playerCnt: " + playerCnt);
+
+            //GameState.SetGameState();
+            customProperties["GameState"] = GameState.GetGameState();
+            Debug.Log("GameState: " + customProperties["GameState"]);
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(customProperties);
         }
