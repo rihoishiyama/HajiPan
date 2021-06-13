@@ -103,7 +103,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
          * なんで??
          */
         //if (GameState.e_GameState.GameStart.Equals((GameState.e_GameState)customProperties["GameState"]))
-        if (GameState.e_GameState.GameStart == ((customProperties["GameState"] is GameState.e_GameState value) ? value : 0))
+        if (GameState.e_GameState.GameStart.Equals((customProperties["GameState"] is object value) ? value : 0))
         {
             GameStartProcess();
             Debug.Log("started GameState Get: " + GameState.GetGameState());
