@@ -102,8 +102,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         /* でも, masterClient以外このif分は処理されない
          * なんで??
          */
-        //if (GameState.e_GameState.GameStart.Equals((GameState.e_GameState)customProperties["GameState"]))
-        if (GameState.e_GameState.GameStart.Equals((customProperties["GameState"] is object value) ? value : 0))
+        if (GameState.e_GameState.GameStart == (GameState.e_GameState)customProperties["GameState"])
         {
             GameStartProcess();
             Debug.Log("started GameState Get: " + GameState.GetGameState());
