@@ -203,7 +203,8 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         player.transform.position = playerPos;
 
         //カラー設定
-        Renderer render = player.GetComponent<Renderer>();
+        var top = player.transform.Find("top");
+        var render = top.GetComponent<MeshRenderer>();
         render.material.color = m_material_colors[m_playerID];
 
         Transform childObj = player.GetComponentInChildren<Transform>();
