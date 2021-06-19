@@ -42,6 +42,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
     private Button startBtn;
 
     private bool isEnableStart = false;
+    private bool isFinishStart = false;
     private int playerCnt;
     private Hashtable customProperties = PhotonNetwork.CurrentRoom.CustomProperties;
 
@@ -64,6 +65,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         startBtn.interactable = false;
         startBtn.onClick.AddListener(() => GameStartBtn());
         isEnableStart = false;
+        isFinishStart = false;
 
         /*
          * SpawnObject()のErrorでこの関数以降の処理が死ぬ.
@@ -92,10 +94,11 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
             isEnableStart = false;
         }
 
-        if (GameState.e_GameState.Game == (GameState.e_GameState)customProperties["GameState"])
+        if (GameState.e_GameState.Game == (GameState.e_GameState)customProperties["GameState"] && !isFinishStart)
         {
             GameStartProcess();
             Debug.Log("started GameState Get: " + GameState.GetGameState());
+            isFinishStart = true;
         }
     }
 
