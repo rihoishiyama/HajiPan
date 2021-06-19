@@ -192,7 +192,9 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         }
         m_photonView = player.GetComponent<PhotonView>();
 
-        SetPlayerID();
+        //SetPlayerID();
+
+        m_playerID = playerCnt - 1;
 
         // ishiyama テスト
         m_gameOver.CreateMyTank(player, m_playerID);

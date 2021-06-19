@@ -45,7 +45,7 @@ public class GameOver : MonoBehaviourPunCallbacks
             m_exitBtn.SetActive(true);
             m_watchBtn.SetActive(true);
 
-            m_judgeText.text = "ゲームオーバー";
+            m_judgeText.text = "Game Over";
 
             m_isCreateTank = false;
         }
