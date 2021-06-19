@@ -14,7 +14,7 @@ public class AvatarController : MonoBehaviourPunCallbacks
         //     transform.Translate(moveVector * moveSpeed * Time.deltaTime, Space.World);
         // }   
         // 自身が生成したオブジェクトだけに移動処理を行う
-        if (photonView.IsMine) {
+        if (photonView.IsMine && GameState.m_gameState == GameState.e_GameState.Game) {
             var input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
             if (input != Vector3.zero)
             {
