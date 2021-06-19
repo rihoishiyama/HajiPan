@@ -43,9 +43,9 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
             // 所有者のプレイヤー名とIDをコンソールに出力する
             Debug.Log($"{owner.NickName}({photonView.OwnerActorNr})");
         }
-		joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
-		onFireButton = GameObject.Find("OnFireButton").GetComponent<Button>();
-		onFireButton.onClick.AddListener(() => shotBullet.ButtonShot());
+		//joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
+		//onFireButton = GameObject.Find("OnFireButton").GetComponent<Button>();
+		//onFireButton.onClick.AddListener(() => shotBullet.ButtonShot());
         //m_photonView = GetComponent<PhotonView>();
 	}
 
