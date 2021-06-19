@@ -92,16 +92,6 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
             isEnableStart = false;
         }
 
-        //Debug.Log(customProperties["GameState"]);
-        //Debug.Log("Get: " + GameState.GetGameState());
-        /*
-         * customPropはMactting→GameStartに変化0→1
-         * GameStateはMacttingのまま変化しない
-         */
-
-        /* でも, masterClient以外このif分は処理されない
-         * なんで??
-         */
         if (GameState.e_GameState.GameStart == (GameState.e_GameState)customProperties["GameState"])
         {
             GameStartProcess();
@@ -111,10 +101,6 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void GameStartBtn()
     {
-        /* masterClientしか処理されない.
-         * 他ユーザのGameStateはMattchingのまま
-         * masterClientの情報をCustomProperすることでcustomProperties["GameState"]は更新されてる.
-         */
         GameState.SetGameState(GameState.e_GameState.GameStart);
         UpdateRoomCustomProperties(playerCnt);
     }
@@ -127,6 +113,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         blockTouchObj.raycastTarget = false;
         startBtn.gameObject.SetActive(false);
         GameState.SetGameState(GameState.e_GameState.Game);
+        UpdateRoomCustomProperties(playerCnt);
         Debug.Log("GameStart!!");
     }
 
