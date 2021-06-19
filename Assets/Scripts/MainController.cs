@@ -67,20 +67,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         isEnableStart = false;
         isFinishStart = false;
 
-        /*
-         * SpawnObject()のErrorでこの関数以降の処理が死ぬ.
-         * →startの1行目におくとstart関数死ぬ. 
-         * Debugで確認できる.
-         */
         SpawnObject();
-        /*
-         * Error内容
-        MissingComponentException: There is no 'Renderer' attached to the "TankPlayer(Clone)" game object, but a script is trying to access it.
-        You probably need to add a Renderer to the game object "TankPlayer(Clone)". Or your script needs to check if the component is attached before using it.
-        UnityEngine.Renderer.get_material () (at /Users/bokken/buildslave/unity/build/Runtime/Export/Graphics/GraphicsRenderers.bindings.cs:133)
-        MainController.SpawnObject () (at Assets/Scripts/MainController.cs:186)
-        MainController.Start () (at Assets/Scripts/MainController.cs:68)
-         */
     }
 
     private void Update()
