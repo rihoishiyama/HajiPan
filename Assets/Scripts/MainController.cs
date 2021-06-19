@@ -86,6 +86,8 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
             GameStartProcess();
             Debug.Log("started GameState Get: " + GameState.GetGameState());
             isFinishStart = true;
+            // 入室を制限
+            PhotonNetwork.CurrentRoom.IsOpen = false;
         }
     }
 

@@ -15,7 +15,7 @@ public class RoomListEntry : MonoBehaviour
     void Start()
     {
         Debug.Log(roomName);
-        button.onClick.AddListener(() => PhotonNetwork.JoinOrCreateRoom(roomName, new RoomOptions() { MaxPlayers = 4 }, TypedLobby.Default));
+        button.onClick.AddListener(() => PhotonNetwork.JoinOrCreateRoom(roomName, new RoomOptions() { MaxPlayers = 4 , IsOpen = true}, TypedLobby.Default));
     }
 
     public void Activate(RoomInfo info)
@@ -27,8 +27,8 @@ public class RoomListEntry : MonoBehaviour
         string playerCounter = string.Format("{0}/{1}", info.PlayerCount, 4);
         buttonText.text = roomName + "\n" + playerCounter;
 
-        // roomの人数が満員じゃない時可能
-        button.interactable = (info.PlayerCount < 4);
+        // roomの人数が満員じゃないかつisOpenの時
+        button.interactable = (info.PlayerCount < 4 && info.IsOpen);
 
         gameObject.SetActive(true);
     }
