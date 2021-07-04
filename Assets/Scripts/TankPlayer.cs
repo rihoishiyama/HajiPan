@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+
 public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 {
 	PhotonView m_photonView;
@@ -37,16 +39,16 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 	void Start()
 	{
 		// 自身が所有者かどうかを判定する
-        if (photonView.IsMine) {
-            // 所有者を取得する
-            Player owner = photonView.Owner;
-            // 所有者のプレイヤー名とIDをコンソールに出力する
-            Debug.Log($"{owner.NickName}({photonView.OwnerActorNr})");
-        }
+		if (photonView.IsMine) {
+			// 所有者を取得する
+			Player owner = photonView.Owner;
+			// 所有者のプレイヤー名とIDをコンソールに出力する
+			Debug.Log($"{owner.NickName}({photonView.OwnerActorNr})");
+		}
 		//joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
 		//onFireButton = GameObject.Find("OnFireButton").GetComponent<Button>();
 		//onFireButton.onClick.AddListener(() => shotBullet.ButtonShot());
-        //m_photonView = GetComponent<PhotonView>();
+		//m_photonView = GetComponent<PhotonView>();
 	}
 
 	// void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -72,17 +74,17 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 
 	void Update()
 	{
-        if (Input.GetKeyDown(KeyCode.Space)) {
+		if (Input.GetKeyDown(KeyCode.Space)) {
 			if (photonView.IsMine) {
 				shotBullet.ButtonShot();
 			}
-			}
+		}
 		// Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
 		// if (moveVector != Vector3.zero)
-        // {
-        //     transform.rotation = Quaternion.LookRotation(moveVector);
-        //     transform.Translate(moveVector * moveSpeed * Time.deltaTime, Space.World);
-        // } 
+		// {
+		//     transform.rotation = Quaternion.LookRotation(moveVector);
+		//     transform.Translate(moveVector * moveSpeed * Time.deltaTime, Space.World);
+		// } 
 		//Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
 		// if (photonview.isMine)
 		// {
@@ -97,7 +99,7 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 		// else
 		// {
 		// 	elapsedTime += Time.deltaTime;
-        //     transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / InterpolationDuration);
+		//     transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / InterpolationDuration);
 		// 	transform.rotation = Quaternion.Lerp(startRotation, endRotation, elapsedTime / InterpolationDuration);
 		// }
 	}
@@ -108,6 +110,16 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 		{
 			AudioSource.PlayClipAtPoint(dieSound, transform.position);
 			//this.gameObject.GetComponent<PhotonView> ().TransferOwnership (PhotonNetwork.player.ID);
+			if (PhotonNetwork.InRoom)
+			{
+				Hashtable customProperties = PhotonNetwork.CurrentRoom.CustomProperties;
+				int alivePlayerNum = (PhotonNetwork.CurrentRoom.CustomProperties["alivePlayer"] is int value) ? value : 0;
+				if(alivePlayerNum > 0)
+                {
+					customProperties["alivePlayer"] = --alivePlayerNum;
+					PhotonNetwork.CurrentRoom.SetCustomProperties(customProperties);
+				}
+			}
 			PhotonNetwork.Destroy(this.gameObject);
 		}
 	}

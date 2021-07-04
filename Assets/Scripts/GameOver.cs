@@ -35,6 +35,7 @@ public class GameOver : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        // ishiyama_TODO:ルームにいる人数になってるから、生きている人の人数に変える
         int totalPlayerNum = (PhotonNetwork.CurrentRoom.CustomProperties["playerCnt"] is int value) ? value : 0;
 
         if (m_isCreateTank && m_tankPlayer == null)//photon側で死んだ判定の時の方がいいかも
@@ -87,7 +88,7 @@ public class GameOver : MonoBehaviourPunCallbacks
     {
         m_gameOverPanel.SetActive(false);
         m_judgeTextObj.SetActive(false);
-        m_exitBtn.SetActive(false);
+        m_exitBtn.SetActive(true);
         m_watchBtn.SetActive(false);
         m_countdownTextObj.SetActive(false);
     }
