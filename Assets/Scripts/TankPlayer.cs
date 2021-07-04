@@ -72,11 +72,11 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 
 	void Update()
 	{
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space) && GameState.m_gameState == GameState.e_GameState.Game) {
 			if (photonView.IsMine) {
 				shotBullet.ButtonShot();
 			}
-			}
+		}
 		// Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
 		// if (moveVector != Vector3.zero)
         // {
