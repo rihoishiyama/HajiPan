@@ -48,7 +48,8 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Space)) {
+
+		if (Input.GetKeyDown(KeyCode.Space) && GameState.m_gameState == GameState.e_GameState.Game) {
 			if (photonView.IsMine) {
 				shotBullet.ButtonShot();
 			}

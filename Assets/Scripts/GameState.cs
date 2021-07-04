@@ -19,7 +19,7 @@ public class GameState : MonoBehaviour
     public enum e_GameState
     {
         Mactting, //マッチング中
-        //GameStart, 
+        GameStart,
         Game, //ゲーム中
         GameEnd, //ゲーム終了
     }

@@ -40,6 +40,8 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
     private Image blockTouchObj;
     [SerializeField]
     private Button startBtn;
+    [SerializeField]
+    private GameObject startAnimObj;
 
     private bool isEnableStart = false;
     private bool isFinishStart = false;
@@ -57,7 +59,9 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         // テスト
         playerCnt = PhotonNetwork.CurrentRoom.PlayerCount;
         Debug.Log("Start playerCnt: " + playerCnt);
-        UpdateRoomCustomProperties(playerCnt);        
+        UpdateRoomCustomProperties(playerCnt);
+
+        startAnimObj.SetActive(false);
 
         // trueで操作不可, falseで操作可能
         blockTouchObj.raycastTarget = true;
@@ -81,9 +85,9 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
             isEnableStart = false;
         }
 
-        if (GameState.e_GameState.Game == (GameState.e_GameState)customProperties["GameState"] && !isFinishStart)
+        if (GameState.e_GameState.GameStart == (GameState.e_GameState)customProperties["GameState"] && !isFinishStart)
         {
-            GameStartProcess();
+            StartCoroutine(GameStartProcess());
             Debug.Log("started GameState Get: " + GameState.GetGameState());
             isFinishStart = true;
             // 入室を制限
@@ -93,19 +97,22 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void GameStartBtn()
     {
-        GameState.SetGameState(GameState.e_GameState.Game);
+        GameState.SetGameState(GameState.e_GameState.GameStart);
         UpdateRoomCustomProperties(playerCnt);
     }
 
-    private void GameStartProcess()
+    private IEnumerator GameStartProcess()
     {
         // TODO
         // startのAnimationを追加したい
+        startBtn.gameObject.SetActive(false);
+        startAnimObj.SetActive(true);
+        yield return new WaitForSecondsRealtime(3f);
+
         Debug.Log("push StartBtn");
         blockTouchObj.raycastTarget = false;
-        startBtn.gameObject.SetActive(false);
         GameState.SetGameState(GameState.e_GameState.Game);
-        //UpdateRoomCustomProperties(playerCnt);
+        UpdateRoomCustomProperties(playerCnt);
         Debug.Log("GameStart!!");
     }
 
