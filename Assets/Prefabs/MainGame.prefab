@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cntText: {fileID: 3138028244612827032}
-  cntdown: 3
+  cntdown: 4
 --- !u!114 &6429053777436270958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,7 +147,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 0}
-  viewIdField: 1
+  viewIdField: 0
   InstantiationId: 1
   isRuntimeInstantiated: 0
 --- !u!1 &6429053777223366155
@@ -2161,7 +2161,7 @@ PrefabInstance:
     - target: {fileID: 1586326304659401864, guid: f3dd33eb4f78440aa8f8764fdf71f9d9,
         type: 3}
       propertyPath: viewIdField
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1586326304659401864, guid: f3dd33eb4f78440aa8f8764fdf71f9d9,
         type: 3}
@@ -2380,7 +2380,7 @@ PrefabInstance:
     - target: {fileID: 4074392976678044117, guid: ce5089f3caa5bb042a4d4c23a427bc82,
         type: 3}
       propertyPath: viewIdField
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4074392976678044117, guid: ce5089f3caa5bb042a4d4c23a427bc82,
         type: 3}

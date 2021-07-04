@@ -13,7 +13,8 @@ public class CountTimer : MonoBehaviour
 
     private void Start()
     {
-        cntdown = 3f;
+        cnt = (int)cntdown;
+        cntText.text = cnt.ToString();
     }
 
     private void Update()
