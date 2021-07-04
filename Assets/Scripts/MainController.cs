@@ -159,6 +159,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         if (PhotonNetwork.InRoom)
         {
             customProperties["playerCnt"] = playerCnt;
+            customProperties["alivePlayer"] = playerCnt; //ishiyama
             roomNumText.text = string.Format("{0}/{1}", playerCnt, 4);
             Debug.Log("Update Room playerCnt: " + playerCnt);
 
@@ -213,7 +214,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         playerPos = m_startPos[m_playerID];
         player.transform.position = playerPos;
 
-        //カラー設定
+        //カラー設定　ishiyama_TODO:色を同期させる
         var top = player.transform.Find("top");
         var render = top.GetComponent<MeshRenderer>();
         render.material.color = m_material_colors[m_playerID];
