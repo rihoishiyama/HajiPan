@@ -85,7 +85,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
             isEnableStart = false;
         }
 
-        if (GameState.e_GameState.Game == (GameState.e_GameState)customProperties["GameState"] && !isFinishStart)
+        if (GameState.e_GameState.GameStart == (GameState.e_GameState)customProperties["GameState"] && !isFinishStart)
         {
             StartCoroutine(GameStartProcess());
             Debug.Log("started GameState Get: " + GameState.GetGameState());
@@ -97,7 +97,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void GameStartBtn()
     {
-        GameState.SetGameState(GameState.e_GameState.Game);
+        GameState.SetGameState(GameState.e_GameState.GameStart);
         UpdateRoomCustomProperties(playerCnt);
     }
 
@@ -112,7 +112,7 @@ public class MainController : MonoBehaviourPunCallbacks, IPunObservable
         Debug.Log("push StartBtn");
         blockTouchObj.raycastTarget = false;
         GameState.SetGameState(GameState.e_GameState.Game);
-        //UpdateRoomCustomProperties(playerCnt);
+        UpdateRoomCustomProperties(playerCnt);
         Debug.Log("GameStart!!");
     }
 
