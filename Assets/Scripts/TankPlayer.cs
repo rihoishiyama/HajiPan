@@ -35,7 +35,6 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 		endRotation = transform.rotation;
 	}
 
-
 	void Start()
 	{
 		// 自身が所有者かどうかを判定する
@@ -45,32 +44,7 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 			// 所有者のプレイヤー名とIDをコンソールに出力する
 			Debug.Log($"{owner.NickName}({photonView.OwnerActorNr})");
 		}
-		//joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
-		//onFireButton = GameObject.Find("OnFireButton").GetComponent<Button>();
-		//onFireButton.onClick.AddListener(() => shotBullet.ButtonShot());
-		//m_photonView = GetComponent<PhotonView>();
 	}
-
-	// void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-	// {
-	// 	if (stream.isWriting)
-	// 	{
-	// 		stream.SendNext(transform.position);
-	// 		stream.SendNext(transform.rotation);
-
-	// 		//データの送信
-	// 	}
-	// 	else
-	// 	{
-	// 		//データの受信
-	// 		startPosition = transform.position;
-	// 		startRotation = transform.rotation;
-
-	// 		endPosition = (Vector3)stream.ReceiveNext();
-	// 		endRotation = (Quaternion)stream.ReceiveNext();
-	// 		elapsedTime = 0f;
-	// 	}
-	// }
 
 	void Update()
 	{
@@ -79,29 +53,6 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 				shotBullet.ButtonShot();
 			}
 		}
-		// Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
-		// if (moveVector != Vector3.zero)
-		// {
-		//     transform.rotation = Quaternion.LookRotation(moveVector);
-		//     transform.Translate(moveVector * moveSpeed * Time.deltaTime, Space.World);
-		// } 
-		//Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
-		// if (photonview.isMine)
-		// {
-		// 	Vector3 moveVector = (Vector3.right * joystick.Horizontal + Vector3.forward * joystick.Vertical);
-
-		// 	if (moveVector != Vector3.zero)
-		// 	{
-		// 		transform.rotation = Quaternion.LookRotation(moveVector);
-		// 		transform.Translate(moveVector * moveSpeed * Time.deltaTime, Space.World);
-		// 	}
-		// }
-		// else
-		// {
-		// 	elapsedTime += Time.deltaTime;
-		//     transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / InterpolationDuration);
-		// 	transform.rotation = Quaternion.Lerp(startRotation, endRotation, elapsedTime / InterpolationDuration);
-		// }
 	}
 
 	private void OnCollisionEnter(Collision other)
@@ -120,6 +71,13 @@ public class TankPlayer : MonoBehaviourPunCallbacks//, IPunObservable
 					PhotonNetwork.CurrentRoom.SetCustomProperties(customProperties);
 				}
 			}
+			// 自分のタンクの場合そのまま破壊
+			if (photonView.IsMine) {
+				PhotonNetwork.Destroy(this.gameObject);
+			}
+			// 当たった弾の所有権をプレイヤーにタンクの所有権を譲渡
+			this.gameObject.GetComponent<PhotonView> ().TransferOwnership (other.gameObject.GetComponent<PhotonView>().OwnerActorNr);
+			// タンクを破壊
 			PhotonNetwork.Destroy(this.gameObject);
 		}
 	}

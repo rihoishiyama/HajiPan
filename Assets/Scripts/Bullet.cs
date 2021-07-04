@@ -24,7 +24,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 				if (photonView.IsMine)
 				{
 				ShotBullet.bulletcount -= 1;
-				//PhotonNetwork.Destroy(this.gameObject);
 				}
 				PhotonNetwork.Destroy(this.gameObject);
 			}
@@ -39,7 +38,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 			if (photonView.IsMine)
 			{
 			ShotBullet.bulletcount -= 1;
-			//PhotonNetwork.Destroy(this.gameObject);
 			}
 			PhotonNetwork.Destroy(this.gameObject);
 		}
@@ -50,7 +48,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 			ShotBullet.bulletcount -= 1;
 			}
 			PhotonNetwork.Destroy(this.gameObject);
-			//Destroy(this.gameObject);
 		}
 			
     }
